@@ -36,6 +36,8 @@
             background: #409eff;
             position: absolute;
             top: 100%   ;
+            transform: translateX(0);
+            transition: all .3s;
         }
         .tabs .tab-panel {
             padding: 16px;
@@ -69,21 +71,39 @@
 
 
     <script>
-        const $ = s => document.querySelector(s)
-        const $$ = s => document.querySelectorAll(s)
-        $$('.tab-item').forEach(($item)=>{
-        $item.onclick = function() {
-            $$('.tab-item').forEach(($item)=> {
+       
+
+        class Tabs {
+            constructor($container) {
+            this.$container = $container
+            this.$$tabItems = $container.querySelectorAll('.tab-item')
+            this.$$tabPanels= $container.querySelectorAll('.tab-panel')
+            this.$line=$container.querySelector('.line')
+            this.bind()
+            }
+            bind(){
+            let self = this
+            this.$$tabItems.forEach(($item)=>{
+            $item.onclick = function() {
+            self.$$tabItems.forEach(($item)=> {
             $item.classList.remove('active')
             this.classList.add('active')
             })
-            let index = [...$$('.tab-item')].indexOf(this)
-            $$('.tab-panel').forEach(($item)=>{
+            self.$line.style.width = this.offsetWidth + 'px'
+            self.$line.style.transform = `translateX(${this.offsetLeft}px)`
+            console.log(this.offsetWidth)
+            console.log(this.offsetLeft)
+            let index = [...self.$$tabItems].indexOf(this)
+            self.$$tabPanels.forEach(($item)=>{
             $item.classList.remove('active')
             })
-            $$('.tab-panel')[index].classList.add('active')
+            self.$$tabPanels[index].classList.add('active')
         }
         })
+            }
+        }
+
+        new Tabs(document.querySelectorAll('.tabs')[0])
 
     </script>
 </body>
